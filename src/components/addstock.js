@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+
+
 export default class CreateStock extends Component {
   constructor(props) {
     super(props);
 
     this.onChangeStock = this.onChangeStock.bind(this);
     this.onRETURN = this.onRETURN.bind(this);
-    this.onChangePic = this.onChangePic.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {
       stock: '',
       RETURN:0,
-      pic:''
+  
     }
   }
 
@@ -29,11 +30,7 @@ export default class CreateStock extends Component {
     })
   }
 
-  onChangePic(e) {
-    this.setState({
-      pic: e.target.value
-    })
-  }
+ 
 
   onSubmit(e) {
     e.preventDefault();
@@ -41,7 +38,6 @@ export default class CreateStock extends Component {
     const trade = {
       stock: this.state.stock,
       RETURN: this.state.RETURN,
-      pic: this.state.pic,
     }
 
     console.log(trade);
@@ -52,15 +48,17 @@ export default class CreateStock extends Component {
     this.setState({
       stock: '',
       RETURN:0.0,
-      pic:''
+    
     });
   }
 
-
+  
 
 
 
   render() {
+    
+    
     return (
       <div className="container">
         <h3>Create New Stock</h3>
@@ -86,15 +84,7 @@ export default class CreateStock extends Component {
                 />
           </div>
 
-          <div className="form-group"> 
-            <label>data link </label>
-            <input  type="text"
-                
-                className="form-control"
-                value={this.state.pic}
-                onChange={this.onChangePic}
-                />
-          </div>
+         
 
           
           <div className="form-group">
