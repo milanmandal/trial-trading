@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Line} from 'react-chartjs-2';
-import axios from 'axios';
+import './layout.css'
+
 
 
 
@@ -16,6 +17,7 @@ function Graph (props) {
       labels:lab,
       datasets: [
           {
+              
               label: 'Price',
               data: dat,
               borderColor: ['white'],
@@ -26,16 +28,26 @@ function Graph (props) {
               lineTension: 0.55,
           }
       ]
+      
   }
-  return( <Line 
+
+  
+  
+  return( 
+        
+            <Line 
+            
             data={state}
             options={{
             title:{
               display:true,
-              text:'Average stock price over 10 days',
+              fontColor:'white',
+              text:`CAPITAL provided: ${props.cap} by ${props.name}`,
               fontSize:20
             }
-          }} />
+          }}  />
+          
+      
 
           
   )
