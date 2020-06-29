@@ -7,6 +7,9 @@ import { BrowserRouter as Router, Route} from "react-router-dom";
 
 function App()
 {
+
+
+  
   return(
     
     <Router>
@@ -15,14 +18,17 @@ function App()
       
       <div>
        
-       <Route path="/" exact component={CreateStock} />
-       <Route path="/stock/" component={trade} />
+      
+       <Route path="/" exact component={trade} />
+       <Route path="/admin" component={CreateStock} />
+       
       </div>
       
     </Router>
+  )
     
 
-  );
+ 
 }
 
 export default App
