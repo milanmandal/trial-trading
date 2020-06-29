@@ -46,7 +46,7 @@ export default class Timer extends Component {
         seconds: seconds,
       });
       
-      // Check if we're at zero.
+      // Check  at zero.
       if (seconds == 0) { 
         clearInterval(this.timer);
       }
