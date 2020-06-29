@@ -1,30 +1,30 @@
-
-
 import React, { Component } from 'react'
 import axios from 'axios';
 import Timer from './timer';
-import Stockdetails from './Stockdetails'
+import Graph from './graph'
+import "bootstrap/dist/css/bootstrap.min.css";
+import ResponsiveContainer from "react-responsive-widget";
 import {Link} from 'react-router-dom';
 import './layout.css';
 
 
 const Stock = props =>(
 
-<th>
-<Link className="text-white font-size-small"  onClick={() => {props.getStock(props.stockname._id) }} >{props.stockname.stock}</Link>
-</th>
+
+<Link className="app-col-6 app-col-lg-2 stock-card text-white"  onClick={() => {props.getStock(props.stockname._id) }} >{props.stockname.stock}</Link>
+
 
 )
 
 
-export class trade extends Component {
+export default class trade extends Component {
 
   
     constructor() {
         super();
         this.state = {
             
-          selectedOption:'',
+          selectedOption:'none',
           RETURN:0,
           AMOUNT:0,
           invest:0,
@@ -32,7 +32,9 @@ export class trade extends Component {
           isSellButton: false,
           isInvestButton: false,
           check:1,
+          ch:true,
           flag:false,
+          graph:true,
           stock_array:[],
          
 
@@ -45,6 +47,7 @@ export class trade extends Component {
          this.formSubmit=this.formSubmit.bind(this);
          this.getStock = this.getStock.bind(this);
          this.graph = this.graph.bind(this);
+         this.onCheck = this.onCheck.bind(this);
 
       }
        
@@ -65,17 +68,32 @@ export class trade extends Component {
 
     getStock(id)
     {
+      if(this.state.ch)
+      {
+        this.setState({graph:true})
+      }
       axios.get('http://localhost:4000/return/'+id)
         .then(response => {
           this.setState({
             selectedOption: response.data.stock,
             RETURN: response.data.RETURN,
+            graph:true,
             })   
         })
         .catch(function (error) {
           console.log(error);
         })
         
+    }
+
+    graph()
+    {
+      this.setState({graph:false})
+    }
+
+    onCheck()
+    {
+      this.setState({graph:true})
     }
 
 
@@ -122,15 +140,10 @@ export class trade extends Component {
     onChangeInvest(event)
     {
       this.setState({
-        
         invest:event.target.value
         });
     }
 
-    graph(event)
-    {
-      return <Stockdetails/>
-    }
    
 
     formSubmit(event)
@@ -144,8 +157,9 @@ export class trade extends Component {
     // submits to disble the sell amount for specific time - submits after fix investment
    onLaunchClicked (event) 
    {
+    
      event.preventDefault();
-      if(this.state.selectedOption=="")
+      if(this.state.selectedOption=="none")
       {
         window.alert("Select a stock to invest")
       }
@@ -161,10 +175,11 @@ export class trade extends Component {
                   isSellButton: true,
                   CAPITAL:(this.state.CAPITAL)-(this.state.invest),
                   isInvestButton:true ,
+                  ch:false,
                   flag:true   
                 });
               // timer 
-              setTimeout(() => this.setState({ isSellButton: false ,flag:false}), 90*1000);
+              setTimeout(() => this.setState({ isSellButton: false ,flag:false}), 90000);
             }
           }
 
@@ -177,58 +192,46 @@ export class trade extends Component {
    }
 
 
-    
-      render() {
-        return (
-       
-                <form>
-                  
-                <div className="stocklist mx-auto">
-                    
-                <h4 className="m-2">STOCK LIST</h4>
-                    <div className="container mx-auto">
-                    <table className="table ">
-                    
-                        <tr>
-                        
-                        {this.stockList()}
-                        
-                        </tr>
-                    </table>
+
+   render()
+   {
+       return(
+        <ResponsiveContainer sm="600" md="900" lg="900" xl="1300">
+            <form onSubmit={this.formSubmit}>
+            <div className="app-row ">
+              {(this.state.graph) ?
+              
+                <div >
+            <div className="app-row">
+                <div className="stocklist">
+                  <div className="container">
+                    <h3>STOCK LIST</h3>
+                    {this.stockList()}
                     </div>
                 </div>
+            </div>
+          
+                  <div className="container-md">
+                <button disabled={this.state.isInvestButton} className="search-button" type="submit" onClick={this.graph} >
+                      SELECT STOCK
+                      </button>
+                    <Graph cap={this.state.CAPITAL} name={this.state.selectedOption}/>
+                </div>
+                
+                </div>:
 
-                <form >
-                    <div className="history" >
-                        <h4 className="text-white m-2">STOCK HISTORY</h4>
-                            <div className="container mx-auto">
-                                <div className="history-img">
-                                    <div className="card-img">
-                                      {this.graph()}
-                                    </div>
-                                </div>
-                                
-                                <div className="history-info">
-                                        <textarea
-                                          type="text" 
-                                          className="form-control"
-                                          placeholder="NOTES..."
-                                          />
-                                </div>
+                        <div className=" ">
+                       
+                            <div className="container">
+                            <h4 className ="text-white m-2">STOCK INVESTMENT</h4>
+                            <input className="input1 ml-1 mt-2" type="text" placeholder="Enter the investment amount" onChange={this.onChangeInvest} ></input>
+                              <button disabled={this.state.isInvestButton} className="btn btn-danger  m-2" type="submit" onClick={this.onLaunchClicked} >
+                              Fix investment
+                              </button>
+                              <button disabled={this.state.isInvestButton} className="btn btn-primary m-2" type="submit" onClick={this.onCheck} >
+                              Select Stock
+                              </button>
                             
-                            </div>
-                    </div>
-                </form>
-
-                <div className="data1">
-                  <h4 className ="text-white m-2">STOCK INVESTMENT</h4>
-                    <div className="container mx-auto">
-                          <form >
-                          <input className="input1 ml-1 mt-2" type="text" placeholder="Enter the investment amount" onChange={this.onChangeInvest} ></input>
-                            <button disabled={this.state.isInvestButton} className="btn btn-danger  m-2" type="submit" onClick={this.onLaunchClicked} >
-                            Fix investment
-                            </button>
-                          </form>
 
                                 <p  className="card-head font-weight-bold">SELL YOUR STOCK TO GET RETURNS</p>
                                 <form onSubmit={this.onSell}>
@@ -236,27 +239,28 @@ export class trade extends Component {
                                   <p>Selected STOCK is : <b>{this.state.selectedOption} </b> </p>
                                   <p>Capital by {this.state.selectedOption}: 10000/-</p>
                                   <p>Active Amount: {this.state.CAPITAL}</p>
-                                  <button disabled={this.state.isSellButton} className="btn bg-success  m-2" type="submit">
+                                
+                                  <div className="time-card">
+                                  {(this.state.flag)?
+                                  <div className="m-2">
+                                    Sell will be enabled after :<Timer/>
+                                    </div>:<div></div>}
+                                  </div>
+                                  <button disabled={this.state.isSellButton} className=" float-left btn bg-success  m-2" type="submit">
                                     Sell
                                   </button>
-                                <div>
-                                  {(this.state.flag)?
-                                  <div>
-                                   Sell will be enabled after :<Timer/>
-                                   </div>: 
-                                   ""}
-                                </div>
                                 </div>
                                 </form>
-                    </div>
-                    </div>
-                
-                </form>
-  
-        );
-    }
-    
-    
-}
+                            </div>
+                        </div>
 
-export default trade
+                
+
+                    }
+            </div>
+            </form>
+        </ResponsiveContainer>
+          
+       )
+   }
+}
