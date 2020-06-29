@@ -1,3 +1,12 @@
+To run front end 
+C:\folder_location>npm start
+
+To run backend
+C:\folder_location\backend>nodemon server
+
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
